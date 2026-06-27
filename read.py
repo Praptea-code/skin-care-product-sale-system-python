@@ -1,30 +1,35 @@
-''' we use dictionary named product to store products inside function
+'''we use dictionary named products to store products inside function
 product id is taken as key and
 product details is taken as value'''
 
+import os
+
+#getting the base directory so file paths always work no matter where the app is run from
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PRODUCTS_FILE = os.path.join(BASE_DIR, "products.txt")
+
 def load_products():
     """
-    Loads product data from "product.txt" file
-    Returns a dictionary where key is product id  value are product details
+    Loads product data from products.txt file
+    Returns a dictionary where key is product id and value is product details
     """
-    products={}
-    #open file product.txt file in read mode
-    file=open("products.txt","r")
-    #read all the lines from the file
-    data=file.readlines()
-    #looping through each line in file
-    prod_id=1
+    products = {}
+    #opening the products.txt file in read mode
+    file = open(PRODUCTS_FILE, "r")
+    #reading all lines from the file
+    data = file.readlines()
+    #looping through each line in the file
+    prod_id = 1
     for line in data:
-        #replacing the new line character and spliting the line by commas
-        line = line.replace("\n","").split(",")
-        #convert the price which is in index 3 from string to integer
+        #stripping newline and splitting by comma, also stripping spaces from each part
+        line = [part.strip() for part in line.replace("\n", "").split(",")]
+        #converting the price at index 3 from string to int and applying 200% markup for sell price
         original_price = int(line[3])
-        #replacing the original price with 200%markup
         line[3] = str(original_price * 2)
-        #adding the updated product list to the dictionary products using prod_id as the key
-        products[prod_id]=line
-        #increment id for next item
-        prod_id=prod_id+1
+        #adding updated product list to dictionary using prod_id as key
+        products[prod_id] = line
+        #incrementing id for next product
+        prod_id = prod_id + 1
     #closing the file
     file.close()
     return products
