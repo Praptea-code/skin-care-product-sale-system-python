@@ -16,6 +16,8 @@ html, body, [class*="css"], .stApp {
     padding: 2rem 3rem !important;
     max-width: 1200px !important;
 }
+            
+header[data-testid="stHeader"] { display: none !important; }
 
 /* ---- sidebar ---- */
 section[data-testid="stSidebar"] {
