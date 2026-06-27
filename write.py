@@ -4,126 +4,118 @@ saving sell bills, restock invoices and updating products.txt'''
 import datetime
 import os
 
-#getting the base directory so file paths always work no matter where the app is run from
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PRODUCTS_FILE = os.path.join(BASE_DIR, "products.txt")
-
-#creating a bills folder to store all bill files
 BILLS_DIR = os.path.join(BASE_DIR, "bills")
 os.makedirs(BILLS_DIR, exist_ok=True)
 
 
 def save_products(products):
-    """
-    Saves the updated product data back to products.txt
-    Uses a temp file first to avoid corrupting the original if something goes wrong
-    Args: products (dict) the updated product dictionary
-    """
-    #writing to a temp file first then renaming it to avoid data corruption
     temp = PRODUCTS_FILE + ".tmp"
     file = open(temp, "w")
     for prod in products.values():
-        #converting back to original price before saving (removing the 200% markup)
         original_price = int(int(prod[3]) / 2)
         line = prod[0] + "," + prod[1] + "," + prod[2] + "," + str(original_price) + "," + prod[4] + "\n"
         file.write(line)
     file.close()
-    #atomically replacing the old file with the new one
     os.replace(temp, PRODUCTS_FILE)
 
 
 def save_sell_bill(name, phone, items, shipping, vat, final_total, grand_total):
-    """
-    Generates and saves a customer bill as a .txt file
-    Args:
-        name (str) customer name
-        phone (str) customer phone number
-        items (list) list of purchased items
-        shipping (int) shipping cost
-        vat (int) vat amount
-        final_total (int) final total after vat and shipping
-        grand_total (int) total before vat
-    Returns: path (str) full path to bill file, filename (str) just the file name
-    """
-    #getting current date and time for the bill
     now = datetime.datetime.now()
-    bill_time = str(now)
-    #creating a unique bill filename using customer name, phone and timestamp
+    bill_time = now.strftime("%d %B %Y, %I:%M %p")
     ts = now.strftime("%Y-%m-%d_%H-%M-%S")
     filename = "bill_" + name + "_" + phone + "_" + ts + ".txt"
     path = os.path.join(BILLS_DIR, filename)
 
-    #opening the bill file in write mode
+    W = 52  # receipt width
+
+    def line(char="-"):
+        return char * W + "\n"
+
+    def center(text):
+        return text.center(W) + "\n"
+
+    def row(label, value, indent=2):
+        space = W - indent - len(label) - len(value)
+        return " " * indent + label + " " * max(1, space) + value + "\n"
+
     file = open(path, "w")
-    file.write("=" * 75 + "\n")
+    file.write(line("="))
+    file.write(center("W E C A R E   W H O L E S A L E"))
+    file.write(center("Sinamangal, Kathmandu"))
+    file.write(line("="))
     file.write("\n")
-    file.write("\tWeCare Wholesale Bill - Sinamangal, Kathmandu\n")
+    file.write(row("Customer:", name))
+    file.write(row("Phone:", phone))
+    file.write(row("Date:", bill_time))
     file.write("\n")
-    file.write("=" * 75 + "\n")
-    file.write("\n")
-    file.write("\tCustomer: " + name + "\t\tPhone: " + phone + "\n")
-    file.write("\tDate and Time: " + bill_time + "\n")
-    file.write("\n")
-    file.write("-" * 75 + "\n")
-    file.write("\tItem\t\tQty\tFree\tPrice\tTotal\n")
-    file.write("-" * 75 + "\n")
-    #writing each purchased item
+    file.write(line("-"))
+    file.write(f"  {'ITEM':<20} {'QTY':>4}  {'FREE':>4}  {'PRICE':>7}  {'TOTAL':>7}\n")
+    file.write(line("-"))
     for item in items:
-        file.write("\t" + item[0] + "\t\t" + str(item[1]) + "\t" + str(item[4]) + "\t" + str(item[2]) + "\t" + str(item[3]) + "\n")
-    file.write("-" * 75 + "\n")
+        name_col = item[0][:20]
+        file.write(f"  {name_col:<20} {item[1]:>4}  {item[4]:>4}  {item[2]:>7}  {item[3]:>7}\n")
+    file.write(line("-"))
     file.write("\n")
-    file.write("\tGrand Total:\t\t\t\tRs " + str(grand_total) + "\n")
-    file.write("\tVAT (13%):\t\t\t\tRs " + str(vat) + "\n")
-    #only writing shipping cost if shipping was requested
+    file.write(row("Subtotal:", f"Rs {grand_total:,}"))
+    file.write(row("VAT (13%):", f"Rs {vat:,}"))
     if shipping > 0:
-        file.write("\tShipping Cost:\t\t\t\tRs " + str(shipping) + "\n")
-    file.write("\tFinal Total:\t\t\t\tRs " + str(final_total) + "\n")
+        file.write(row("Shipping:", f"Rs {shipping:,}"))
+    file.write(line())
+    file.write(row("TOTAL PAYABLE:", f"Rs {final_total:,}"))
+    file.write(line())
     file.write("\n")
-    file.write("=" * 75 + "\n")
+    file.write(center("Thank you for shopping at WeCare!"))
+    file.write(center("Please visit again :)"))
     file.write("\n")
-    file.write("\tTHANK YOU FOR VISITING, Do visit again! :)\n")
-    file.write("\n")
-    file.write("=" * 75 + "\n")
+    file.write(line("="))
     file.close()
     return path, filename
 
 
 def save_restock_bill(items, subtotal, vat, grand_total):
-    """
-    Generates and saves a restock invoice as a .txt file
-    Args:
-        items (list) list of restocked items
-        subtotal (int) total before vat
-        vat (int) vat amount
-        grand_total (int) total after vat
-    Returns: path (str) full path to invoice file, filename (str) just the file name
-    """
-    #getting current date and time for the invoice
     now = datetime.datetime.now()
-    buy_time = str(now)
-    #creating a unique invoice filename using timestamp
+    buy_time = now.strftime("%d %B %Y, %I:%M %p")
     ts = now.strftime("%Y-%m-%d_%H-%M-%S")
     filename = "restock_" + ts + ".txt"
     path = os.path.join(BILLS_DIR, filename)
 
-    #opening the invoice file in write mode
+    W = 52
+
+    def line(char="-"):
+        return char * W + "\n"
+
+    def center(text):
+        return text.center(W) + "\n"
+
+    def row(label, value, indent=2):
+        space = W - indent - len(label) - len(value)
+        return " " * indent + label + " " * max(1, space) + value + "\n"
+
     file = open(path, "w")
-    file.write("=" * 60 + "\n")
-    file.write("\tWeCare Wholesale Restock Invoice - Kathmandu\n")
-    file.write("=" * 60 + "\n")
-    file.write("\tDate and Time: " + buy_time + "\n")
-    file.write("-" * 60 + "\n")
-    file.write("\tProduct\t\tQty\tPrice\tTotal\n")
-    file.write("-" * 60 + "\n")
-    #writing each restocked item
+    file.write(line("="))
+    file.write(center("W E C A R E   R E S T O C K   I N V O I C E"))
+    file.write(center("Sinamangal, Kathmandu"))
+    file.write(line("="))
+    file.write(row("Date:", buy_time))
+    file.write("\n")
+    file.write(line("-"))
+    file.write(f"  {'PRODUCT':<20} {'QTY':>4}  {'PRICE':>7}  {'TOTAL':>7}\n")
+    file.write(line("-"))
     for item in items:
-        file.write("\t" + item[0] + "\t" + str(item[1]) + "\t" + str(item[2]) + "\t" + str(item[3]) + "\n")
-    file.write("-" * 60 + "\n")
-    file.write("\tSubtotal:\t\t\t" + str(subtotal) + "\n")
-    file.write("\tVAT (13%):\t\t\t" + str(vat) + "\n")
-    file.write("\tGrand Total:\t\t\t" + str(grand_total) + "\n")
-    file.write("=" * 60 + "\n")
-    file.write("\tRestock complete, Ready for sales!\n")
-    file.write("=" * 60 + "\n")
+        name_col = item[0][:20]
+        file.write(f"  {name_col:<20} {item[1]:>4}  {item[2]:>7}  {item[3]:>7}\n")
+    file.write(line("-"))
+    file.write("\n")
+    file.write(row("Subtotal:", f"Rs {subtotal:,}"))
+    file.write(row("VAT (13%):", f"Rs {vat:,}"))
+    file.write(line())
+    file.write(row("TOTAL PAYABLE:", f"Rs {grand_total:,}"))
+    file.write(line())
+    file.write("\n")
+    file.write(center("Restock complete. Ready for sales!"))
+    file.write("\n")
+    file.write(line("="))
     file.close()
     return path, filename

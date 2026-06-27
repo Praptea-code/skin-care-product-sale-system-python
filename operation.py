@@ -231,8 +231,7 @@ def handle_sell_page(products):
     if st.session_state.bill_text:
         st.markdown('<div class="section-label">Customer Receipt</div>', unsafe_allow_html=True)
         with st.container(border=True):
-            st.markdown(f'<div class="bill-box">{st.session_state.bill_text}</div>', unsafe_allow_html=True)
-            st.write("")
+            st.code(st.session_state.bill_text, language=None)
             st.download_button("Download Receipt", data=st.session_state.bill_text, file_name=st.session_state.bill_fname, mime="text/plain")
 
 
@@ -301,8 +300,7 @@ def handle_restock_page(products):
     if st.session_state.restock_bill_text:
         st.markdown('<div class="section-label">Procurement Invoice</div>', unsafe_allow_html=True)
         with st.container(border=True):
-            st.markdown(f'<div class="bill-box">{st.session_state.restock_bill_text}</div>', unsafe_allow_html=True)
-            st.write("")
+            st.code(st.session_state.restock_bill_text, language=None)
             st.download_button("Download Invoice", data=st.session_state.restock_bill_text, file_name=st.session_state.restock_bill_fname, mime="text/plain")
 
 

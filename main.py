@@ -245,18 +245,22 @@ label[data-testid="stWidgetLabel"] p {
 .total-item.highlight .total-val { color: #ffffff; }
 .total-item.highlight .total-lbl { color: #f2dede; }
 
-/* ---- bill box ---- */
-.bill-box {
-    background: #faf5f5;
-    border: 1px solid #eedede;
-    border-radius: 12px;
-    padding: 1.2rem 1.5rem;
-    font-family: 'Courier New', monospace;
-    font-size: 0.82rem;
-    color: #443335;
-    white-space: pre;
-    overflow-x: auto;
-    line-height: 1.7;
+/* ---- receipt code block ---- */
+.stCode, [data-testid="stCode"] {
+    background: #faf5f5 !important;
+    border: 1px solid #eedede !important;
+    border-radius: 12px !important;
+}
+.stCode pre, [data-testid="stCode"] pre,
+.stCode code, [data-testid="stCode"] code {
+    background: #faf5f5 !important;
+    color: #2a1515 !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.82rem !important;
+    font-weight: 400 !important;
+    line-height: 1.65 !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 /* ---- buttons ---- */
