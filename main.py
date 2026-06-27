@@ -343,7 +343,14 @@ label[data-testid="stWidgetLabel"] p {
 .info-chip.promo strong { color: #1e6b3e; }
 
 /* ---- hide streamlit chrome ---- */
-#MainMenu, footer, header { visibility: hidden !important; }
+#MainMenu { visibility: hidden !important; }
+footer { visibility: hidden !important; }
+/* Don't hide header — it contains the sidebar toggle we need */
+header { visibility: hidden !important; }
+header button[data-testid="baseButton-headerNoPadding"],
+header button[data-testid="collapsedControl"] {
+    visibility: visible !important;
+}
 
 @media (max-width: 768px) {
     /* Make sidebar full-width drawer on mobile */
