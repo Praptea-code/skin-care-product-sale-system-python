@@ -8,6 +8,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* ---- base ---- */
 html, body, [class*="css"], .stApp {
     font-family: 'Inter', sans-serif !important;
     background-color: #fdf8f8 !important;
@@ -95,7 +96,7 @@ section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label > div:f
 
 /* ---- page typography ---- */
 .page-title {
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 4vw, 2rem);
     font-weight: 700;
     color: #2a1515;
     letter-spacing: -0.5px;
@@ -116,7 +117,7 @@ section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label > div:f
     margin-top: 1.2rem;
 }
 
-/* ---- fix st.container(border=True) styling ---- */
+/* ---- st.container(border=True) ---- */
 [data-testid="stVerticalBlockBorderWrapper"] {
     background: #ffffff !important;
     border: 1.5px solid #f2dede !important;
@@ -126,7 +127,7 @@ section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label > div:f
     margin-bottom: 1.2rem !important;
 }
 
-/* ---- fix ALL input labels to be visible ---- */
+/* ---- input labels ---- */
 .stTextInput label,
 .stNumberInput label,
 .stSelectbox label,
@@ -170,12 +171,13 @@ label[data-testid="stWidgetLabel"] p {
 .stat-box {
     background: #ffffff;
     border-radius: 16px;
-    padding: 1.6rem 1.8rem;
+    padding: 1.4rem 1.6rem;
     border: 1px solid #f2dede;
     box-shadow: 0 2px 8px rgba(184,76,85,0.04);
+    margin-bottom: 0.75rem;
 }
 .stat-value {
-    font-size: 2.6rem;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
     font-weight: 700;
     color: #2a1515;
     line-height: 1.1;
@@ -188,21 +190,13 @@ label[data-testid="stWidgetLabel"] p {
     letter-spacing: 0.08em;
     color: #c4959b;
 }
-.stat-box.alert-active { border-color: #f5c6c8; background: #fffafa; }
+.stat-box.alert-active {
+    border-color: #f5c6c8;
+    background: #fffafa;
+}
 .stat-box.alert-active .stat-value { color: #b84c55; }
 
 /* ---- pills ---- */
-.free-badge {
-    display: inline-block;
-    background: #e6f7ed;
-    color: #1e6b3e;
-    border-radius: 20px;
-    padding: 0.4rem 1.1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin: 0.5rem 0 1rem 0;
-    border: 1px solid #c8ebd5;
-}
 .low-pill {
     display: inline-block;
     background: #fde8e8;
@@ -217,22 +211,20 @@ label[data-testid="stWidgetLabel"] p {
 }
 
 /* ---- totals grid ---- */
-.totals-grid {
-    display: flex;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    flex-wrap: wrap;
-}
 .total-item {
     flex: 1;
-    min-width: 130px;
+    min-width: 120px;
     background: #fff8f8;
     border: 1px solid #f5e2e2;
     border-radius: 14px;
     padding: 1.1rem;
     text-align: center;
 }
-.total-val { font-size: 1.3rem; font-weight: 700; color: #8b2e35; }
+.total-val {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-weight: 700;
+    color: #8b2e35;
+}
 .total-lbl {
     font-size: 0.75rem;
     color: #b09095;
@@ -241,7 +233,10 @@ label[data-testid="stWidgetLabel"] p {
     letter-spacing: 0.05em;
     font-weight: 500;
 }
-.total-item.highlight { background: #b84c55; border-color: #b84c55; }
+.total-item.highlight {
+    background: #b84c55;
+    border-color: #b84c55;
+}
 .total-item.highlight .total-val { color: #ffffff; }
 .total-item.highlight .total-lbl { color: #f2dede; }
 
@@ -271,6 +266,7 @@ label[data-testid="stWidgetLabel"] p {
     padding: 0.55rem 1.6rem !important;
     transition: all 0.15s ease !important;
     border: none !important;
+    width: 100%;
 }
 .stButton > button[kind="primary"] {
     background: #b84c55 !important;
@@ -296,6 +292,7 @@ label[data-testid="stWidgetLabel"] p {
     font-size: 0.9rem !important;
     font-weight: 600 !important;
     padding: 0.55rem 1.6rem !important;
+    width: 100%;
 }
 .stDownloadButton > button:hover {
     border-color: #b84c55 !important;
@@ -307,20 +304,14 @@ label[data-testid="stWidgetLabel"] p {
     border-radius: 12px !important;
     border: 1px solid #f2dede !important;
     overflow: hidden !important;
+    overflow-x: auto !important;
 }
 
-/* ---- misc ---- */
+/* ---- checkbox ---- */
 .stCheckbox label p, .stToggle label p {
     font-size: 0.92rem !important;
     color: #5a3535 !important;
 }
-
-/* ---- misc ---- */
-.stCheckbox label p {
-    font-size: 0.92rem !important;
-    color: #5a3535 !important;
-}
-/* checkbox accent color */
 .stCheckbox input[type="checkbox"]:checked {
     background-color: #b84c55 !important;
     border-color: #b84c55 !important;
@@ -329,6 +320,8 @@ label[data-testid="stWidgetLabel"] p {
     border: 2px solid #c4959b !important;
     border-radius: 4px !important;
 }
+
+/* ---- alerts ---- */
 .stSuccess > div {
     background: #f0faf4 !important;
     border: 1px solid #ccebda !important;
@@ -344,6 +337,7 @@ label[data-testid="stWidgetLabel"] p {
     font-size: 0.92rem !important;
 }
 
+/* ---- info chip ---- */
 .info-chip {
     background: #fff8f8;
     border: 1px solid #f2dede;
@@ -352,8 +346,9 @@ label[data-testid="stWidgetLabel"] p {
     font-size: 0.88rem;
     color: #5a3535;
     margin-bottom: 0.8rem;
-    display: inline-block;
+    display: block;
     width: 100%;
+    box-sizing: border-box;
 }
 .info-chip strong { color: #b84c55; }
 .info-chip.promo {
@@ -363,7 +358,84 @@ label[data-testid="stWidgetLabel"] p {
 }
 .info-chip.promo strong { color: #1e6b3e; }
 
+/* ---- hide streamlit chrome ---- */
 #MainMenu, footer, header { visibility: hidden !important; }
+
+/* ---- mobile overrides ---- */
+@media (max-width: 768px) {
+    .block-container {
+        padding: 1rem 1rem !important;
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        padding: 1rem !important;
+        border-radius: 12px !important;
+    }
+
+    .page-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.2rem;
+    }
+    .page-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 1.2rem;
+    }
+
+    /* Stack stat boxes vertically on small screens */
+    [data-testid="column"] .stat-box {
+        margin-bottom: 0.6rem;
+    }
+
+    /* Totals: allow wrapping on small screens */
+    .total-item {
+        min-width: 100px;
+        padding: 0.8rem 0.6rem;
+    }
+    .total-val { font-size: 1rem; }
+
+    /* Full-width buttons on mobile */
+    .stButton > button,
+    .stDownloadButton > button {
+        width: 100% !important;
+        padding: 0.6rem 1rem !important;
+    }
+
+    .info-chip {
+        font-size: 0.82rem;
+        padding: 0.45rem 0.75rem;
+    }
+
+    /* Scrollable dataframe on narrow screens */
+    .stDataFrame {
+        overflow-x: auto;
+    }
+
+    .section-label {
+        margin-top: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .block-container {
+        padding: 0.75rem 0.5rem !important;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .total-item {
+        min-width: 80px;
+        padding: 0.6rem 0.4rem;
+    }
+    .total-lbl {
+        font-size: 0.65rem;
+    }
+
+    .page-title {
+        font-size: 1.2rem;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
