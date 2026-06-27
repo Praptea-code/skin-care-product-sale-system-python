@@ -343,7 +343,7 @@ label[data-testid="stWidgetLabel"] p {
 .info-chip.promo strong { color: #1e6b3e; }
 
 /* ---- hide streamlit chrome ---- */
-#MainMenu, footer, header { visibility: hidden !important; }
+#MainMenu, footer { visibility: hidden !important; }
 </style>
 """, unsafe_allow_html=True)
 
